@@ -14,17 +14,23 @@ public class Main extends Application {
     MainMenuScreen mainMenuScreen;
     GameScreen gameScreen;
 
+    Physics physics;
+    MainLoop mainLoop;
+
+    Thread loopThread;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        createViews();
         currentView = new HBox();
-        currentView.getChildren().add(mainMenuScreen);
         beginConfiguration();
+        createViews();
+        currentView.getChildren().add(mainMenuScreen);
     }
 
     private void beginConfiguration(){
-
+        physics = new Physics();
+        mainLoop = new MainLoop(physics);
         root = new StackPane();
         root.getChildren().add(currentView);
         scene = new Scene(root, 1000, 750);
@@ -34,7 +40,7 @@ public class Main extends Application {
     }
     private void createViews() {
         mainMenuScreen = new MainMenuScreen(this);
-        gameScreen = new GameScreen(this);
+        gameScreen = new GameScreen(this,physics);
     }
 
     public static void main(String[] args){
@@ -45,5 +51,24 @@ public class Main extends Application {
     }
     public void changeScreenToGameScreen(){
         currentView.getChildren().set(0,gameScreen);
+    }
+
+
+
+    public void disableAutoamtedTicks(){
+        mainLoop.disableAutoamtedTicks();
+    }
+    public void enableAutoamtedTicks(){
+        mainLoop.enableAutoamtedTicks();
+    }
+    public void startLoop(){
+        loopThread = new Thread(mainLoop);
+        loopThread.start();
+    }
+    public void stopLoop(){
+        mainLoop.stopLoop();
+    }
+    public void singleTick(){
+        physics.tick();
     }
 }
