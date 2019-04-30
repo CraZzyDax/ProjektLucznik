@@ -1,5 +1,7 @@
+import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -20,6 +22,8 @@ public class GameScreen extends HBox {
 
     private Image background;
     private ImageView backgroundImageView;
+    private Image pasek;
+    private ImageView pasekImageView;
 
     private Image arrowImage;
     private ImageView arrowImageView;
@@ -29,38 +33,33 @@ public class GameScreen extends HBox {
     private HBox pasekPower;
     private HBox pasekX;
     private HBox pasekY;
-    private HBox pasekZ;
     private HBox pasekAngle;
     private Pane gamePane;
     private VBox positionLabelsVBox;
     private VBox buttonsVBox;
 
-    private Button executeButton;
-    private Button startStopButton;
-    private Button tickButton;
+
+    private Rectangle executeRectangle;
+    private Rectangle startStopRectangle;
+    private Rectangle tickRectangle;
+    private Rectangle exitRectangle;
 
 
     private Slider powerSlider;
     private Slider windSliderX;
-    private Slider windSliderY;
-    private Slider windSliderZ;
+    private Slider gravitationSlider;
     private Slider angle;
-    private Label powerLabel;
-    private Label windLabelX;
-    private Label windLabelY;
-    private Label windLabelZ;
     private Label powerLabelValue;
     private Label windLabelValueX;
     private Label windLabelValueY;
-    private Label windLabelValueZ;
     private Label angleLabelValue;
 
 
     private Label arrowPositionX;
     private Label arrowPositionY;
-    private Label arrowPositionZ;
 
     private VBox mainVBox;
+    private Pane pasekPane;
 
     private Physics physics;
 
@@ -73,6 +72,7 @@ public class GameScreen extends HBox {
         try {
             background = new Image(new FileInputStream("gra.png"));
             arrowImage = new Image(new FileInputStream("strzala.png"));
+            pasek = new Image(new FileInputStream("pasek.png")) ;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -86,53 +86,93 @@ public class GameScreen extends HBox {
 
         arrowRectangle = new Rectangle(75,15, Color.RED);
 
+        executeRectangle = new Rectangle(250,25);
+        tickRectangle = new Rectangle(250,25);
+        startStopRectangle = new Rectangle(250,25);
+        exitRectangle = new Rectangle(100,30);
 
-        executeButton = new Button("Wykonaj");
-        startStopButton = new Button("Wlacz/wylacz autoamtyczna petle");
-        tickButton = new Button("Wykonaj jeden cykl");
+        executeRectangle.setX(300);
+        tickRectangle.setX(300);
+        startStopRectangle.setX(300);
+        executeRectangle.setY(3);
+        startStopRectangle.setY(36);
+        tickRectangle.setY(72);
+        exitRectangle.setX(800);
+        exitRectangle.setY(10);
+        executeRectangle.setFill(Color.rgb(255,2,2,0));
+        tickRectangle.setFill(Color.rgb(255,2,2,0));
+        startStopRectangle.setFill(Color.rgb(255,2,2,0));
+        exitRectangle.setFill(Color.rgb(255,2,2,0));
+
+
         paski = new VBox();
         pasekPower = new HBox();
         pasekX = new HBox();
         pasekY = new HBox();
-        pasekZ = new HBox();
         pasekAngle = new HBox();
         gamePane = new Pane();
         buttonsVBox = new VBox();
+        pasekPane = new Pane();
 
-        powerLabel = new Label("Sila: ");
-        windLabelX = new Label("Wiatr X: ");
-        windLabelY = new Label("Wiatr Y: ");
-        windLabelZ = new Label("Wiatr Z: ");
         angleLabelValue = new Label("0");
         powerLabelValue = new Label("50");
         windLabelValueX = new Label("50");
         windLabelValueY = new Label("50");
-        windLabelValueZ = new Label("50");
+
+        angleLabelValue.setTextFill(Color.WHITE);
+        powerLabelValue.setTextFill(Color.WHITE);
+        windLabelValueX.setTextFill(Color.WHITE);
+        windLabelValueY.setTextFill(Color.WHITE);
+
+        angleLabelValue.setScaleX(1.5);
+        angleLabelValue.setScaleY(1.5);
+        powerLabelValue.setScaleX(1.5);
+        powerLabelValue.setScaleY(1.5);
+        windLabelValueX.setScaleX(1.5);
+        windLabelValueX.setScaleY(1.5);
+        windLabelValueY.setScaleX(1.5);
+        windLabelValueY.setScaleY(1.5);
+
+
         arrowPositionX = new Label(Integer.toString(physics.getArrow().getPosX()));
         arrowPositionY = new Label(Integer.toString(physics.getArrow().getPosY()));
-        arrowPositionZ = new Label(Integer.toString(physics.getArrow().getPosZ()));
 
+
+
+
+
+
+        arrowPositionX.setScaleX(1.5);
+        arrowPositionX.setScaleY(1.5);
+        arrowPositionY.setScaleX(1.5);
+        arrowPositionY.setScaleY(1.5);
+        arrowPositionY.setTextFill(Color.WHITE);
+        arrowPositionX.setTextFill(Color.WHITE);
+        arrowPositionY.setPadding(new Insets(7,0,0,0));
         positionLabelsVBox = new VBox();
+        positionLabelsVBox.setPadding(new Insets(3,0,0,440));
         positionLabelsVBox.getChildren().add(arrowPositionX);
         positionLabelsVBox.getChildren().add(arrowPositionY);
-        positionLabelsVBox.getChildren().add(arrowPositionZ);
 
         configorationHBox = new HBox();
         powerSlider = new Slider(0, 100, 50);
         windSliderX = new Slider(-50, 50, 0);
-        windSliderY = new Slider(-50, 50, 0);
-        windSliderZ = new Slider(-50, 50, 0);
+        gravitationSlider = new Slider(-50, 50, 0);
         angle = new Slider(0, 90, 0);
-        pasekPower.getChildren().addAll(powerLabel,powerSlider,powerLabelValue);
-        pasekX.getChildren().addAll(windLabelX,windSliderX,windLabelValueX);
-        pasekY.getChildren().addAll(windLabelY,windSliderY,windLabelValueY);
-        pasekZ.getChildren().addAll(windLabelZ,windSliderZ,windLabelValueZ);
+        pasekPower.getChildren().addAll(powerSlider,powerLabelValue);
+        pasekX.getChildren().addAll(windSliderX,windLabelValueX);
+        pasekX.setPadding(new Insets(8,0,0,0));
+        pasekY.setPadding(new Insets(8,0,0,0));
+        pasekAngle.setPadding(new Insets(8,0,0,0));
+        pasekY.getChildren().addAll(gravitationSlider,windLabelValueY);
 
         pasekAngle.getChildren().addAll(angle,angleLabelValue);
 
-        paski.getChildren().addAll(pasekPower,pasekX,pasekY,pasekZ,pasekAngle);
+        paski.getChildren().addAll(pasekPower,pasekX,pasekY,pasekAngle);
+        paski.setPadding(new Insets(9,0,0,125));
 
-        buttonsVBox.getChildren().addAll(executeButton,startStopButton,tickButton);
+        //buttonsVBox.getChildren().addAll(executeRectangle);
+        //pasekPane.getChildren().addAll(executeRectangle);
 
         configorationHBox.getChildren().addAll(paski,buttonsVBox,positionLabelsVBox);
 
@@ -150,19 +190,36 @@ public class GameScreen extends HBox {
 
         arrowImageView = new ImageView(arrowImage);
         backgroundImageView.setX(0);
+        pasekImageView = new ImageView(pasek);
         arrowRectangle.setFill(new ImagePattern(arrowImage));
         arrowRectangle.setX(physics.getArrow().getPosX()-75);
         arrowRectangle.setY(physics.getArrow().getPosY()-7);
 
         mainVBox= new VBox();
 
+        pasekPane.getChildren().addAll(pasekImageView,configorationHBox);
+        pasekPane.getChildren().addAll(executeRectangle,startStopRectangle,tickRectangle,exitRectangle);
         gamePane.getChildren().add(backgroundImageView);
         gamePane.getChildren().add(arrowRectangle);
 
         mainVBox.getChildren().add(gamePane);
-        mainVBox.getChildren().add(configorationHBox);
+        mainVBox.getChildren().add(pasekPane);
 
         this.getChildren().add(mainVBox);
+
+
+        AnimationTimer timer = new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+                arrowRectangle.setX(physics.getArrow().getPosX()-75);
+                arrowRectangle.setY(physics.getArrow().getPosY()-7);
+                arrowPositionX.setText(Integer.toString(physics.getArrow().getPosX()));
+                arrowPositionY.setText(Integer.toString(physics.getArrow().getPosY()));
+            }
+
+        };
+        timer.start();
 
 
     }
@@ -182,18 +239,11 @@ public class GameScreen extends HBox {
                 physics.setWindX(newValue.intValue());
             }
         });
-        windSliderY.valueProperty().addListener(new ChangeListener<Number>() {
+        gravitationSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 windLabelValueY.setText(Integer.toString(newValue.intValue()));
                 physics.setWindY(newValue.intValue());
-            }
-        });
-        windSliderZ.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                windLabelValueZ.setText(Integer.toString(newValue.intValue()));
-                physics.setWindZ(newValue.intValue());
             }
         });
 
@@ -204,11 +254,17 @@ public class GameScreen extends HBox {
             drawArrowBeforeShot();
         });
 
-        executeButton.setOnAction(event -> {
+        executeRectangle.setOnMouseClicked(event -> {
             main.startLoop();
             main.enableAutoamtedTicks();
         });
+        startStopRectangle.setOnMouseClicked(event -> main.changeAutomatedLoop());
 
+        tickRectangle.setOnMouseClicked(event -> main.singleTick());
+        exitRectangle.setOnMouseClicked(event -> {
+            main.stopLoop();
+            main.exit();
+        });
     }
 
     private void drawArrowBeforeShot(){

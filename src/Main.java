@@ -71,4 +71,10 @@ public class Main extends Application {
     public void singleTick(){
         physics.tick();
     }
+    public void changeAutomatedLoop(){
+        if(mainLoop.isEnableAutomatedTicks())
+            disableAutoamtedTicks();
+        else
+            enableAutoamtedTicks();
+    }
 }
