@@ -160,10 +160,10 @@ public class GameScreen extends HBox {
         positionLabelsVBox.getChildren().add(arrowPositionY);
 
         configorationHBox = new HBox();
-        powerSlider = new Slider(0, 100, 50);
+        powerSlider = new Slider(0, 100, 10);
         windSliderX = new Slider(-50, 50, 0);
         gravitationSlider = new Slider(-50, 50, 0);
-        angle = new Slider(0, 180, 0);
+        angle = new Slider(0, 180, 90);////////////////////////////////
         pasekPower.getChildren().addAll(powerSlider,powerLabelValue);
         pasekX.getChildren().addAll(windSliderX,windLabelValueX);
         pasekX.setPadding(new Insets(8,0,0,0));

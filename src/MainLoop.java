@@ -1,6 +1,6 @@
 public class MainLoop implements Runnable {
 
-    private int idleTime =  200;
+    private int idleTime =  100;
     private boolean running = true;
     private Physics physics;
     private boolean enableAutomatedTicks = true;
