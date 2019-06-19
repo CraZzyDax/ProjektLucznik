@@ -2,7 +2,6 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -14,11 +13,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
+import java.lang.Math;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class GameScreen extends HBox {
+
+    private boolean isStarted;
 
     private Image background;
     private ImageView backgroundImageView;
@@ -84,6 +86,8 @@ public class GameScreen extends HBox {
     }
     private void beginConfiguration(){
 
+
+        isStarted = false;
         arrowRectangle = new Rectangle(75,15, Color.RED);
 
         executeRectangle = new Rectangle(250,25);
@@ -134,8 +138,8 @@ public class GameScreen extends HBox {
         windLabelValueY.setScaleY(1.5);
 
 
-        arrowPositionX = new Label(Integer.toString(physics.getArrow().getPosX()));
-        arrowPositionY = new Label(Integer.toString(physics.getArrow().getPosY()));
+        arrowPositionX = new Label(Double.toString(physics.getArrow().getPosX()));
+        arrowPositionY = new Label(Double.toString(physics.getArrow().getPosY()));
 
 
 
@@ -158,7 +162,7 @@ public class GameScreen extends HBox {
         powerSlider = new Slider(0, 100, 50);
         windSliderX = new Slider(-50, 50, 0);
         gravitationSlider = new Slider(-50, 50, 0);
-        angle = new Slider(0, 90, 0);
+        angle = new Slider(0, 180, 0);
         pasekPower.getChildren().addAll(powerSlider,powerLabelValue);
         pasekX.getChildren().addAll(windSliderX,windLabelValueX);
         pasekX.setPadding(new Insets(8,0,0,0));
@@ -211,11 +215,11 @@ public class GameScreen extends HBox {
         AnimationTimer timer = new AnimationTimer() {
 
             @Override
-            public void handle(long now) {
+            public synchronized void handle(long now) {
                 arrowRectangle.setX(physics.getArrow().getPosX()-75);
                 arrowRectangle.setY(physics.getArrow().getPosY()-7);
-                arrowPositionX.setText(Integer.toString(physics.getArrow().getPosX()));
-                arrowPositionY.setText(Integer.toString(physics.getArrow().getPosY()));
+                arrowPositionX.setText(Double.toString(physics.getArrow().getPosX()));
+                arrowPositionY.setText(Double.toString(physics.getArrow().getPosY()));
             }
 
         };
@@ -243,7 +247,7 @@ public class GameScreen extends HBox {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 windLabelValueY.setText(Integer.toString(newValue.intValue()));
-                physics.setWindY(newValue.intValue());
+                physics.setg(newValue.intValue());
             }
         });
 
@@ -255,8 +259,12 @@ public class GameScreen extends HBox {
         });
 
         executeRectangle.setOnMouseClicked(event -> {
-            main.startLoop();
-            main.enableAutoamtedTicks();
+            if(!isStarted){
+                main.startLoop();
+                main.enableAutoamtedTicks();
+            }
+
+            isStarted = true;
         });
         startStopRectangle.setOnMouseClicked(event -> main.changeAutomatedLoop());
 

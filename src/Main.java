@@ -33,7 +33,7 @@ public class Main extends Application {
         mainLoop = new MainLoop(physics);
         root = new StackPane();
         root.getChildren().add(currentView);
-        scene = new Scene(root, 1000, 750);
+        scene = new Scene(root, 1000, 770);
         primaryStage.setTitle("Łucznik: the game");
         primaryStage.setScene(scene);
         primaryStage.show();
