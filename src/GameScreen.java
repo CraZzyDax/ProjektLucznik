@@ -80,7 +80,6 @@ public class GameScreen extends HBox {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        this.physics = physics;
         beginConfiguration();
         this.main = main;
         addEventsListeners();

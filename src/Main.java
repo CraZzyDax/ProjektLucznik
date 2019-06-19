@@ -1,5 +1,8 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -36,6 +39,16 @@ public class Main extends Application {
         primaryStage.setTitle("Łucznik: the game");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        scene.setOnKeyPressed(event -> {
+            if(event.getCode()== KeyCode.R){
+                mainLoop.stopLoop();
+                gameScreen = new GameScreen(this);
+                currentView.getChildren().set(0,gameScreen);
+                System.out.println("blah");
+            }
+        });
+
     }
     private void createViews() {
         mainMenuScreen = new MainMenuScreen(this);
