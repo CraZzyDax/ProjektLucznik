@@ -29,8 +29,7 @@ public class Main extends Application {
     }
 
     private void beginConfiguration(){
-        physics = new Physics();
-        mainLoop = new MainLoop(physics);
+
         root = new StackPane();
         root.getChildren().add(currentView);
         scene = new Scene(root, 1000, 770);
@@ -40,7 +39,7 @@ public class Main extends Application {
     }
     private void createViews() {
         mainMenuScreen = new MainMenuScreen(this);
-        gameScreen = new GameScreen(this,physics);
+        gameScreen = new GameScreen(this);
     }
 
     public static void main(String[] args){
@@ -62,11 +61,19 @@ public class Main extends Application {
         mainLoop.enableAutoamtedTicks();
     }
     public void startLoop(){
+        physics = new Physics(
+                (double) gameScreen.getAngle().getValue(),
+                (double) gameScreen.getPowerSlider().getValue(),
+                (double) gameScreen.getGravitationSlider().getValue(),
+                (double) gameScreen.getWindSliderX().getValue());
+        gameScreen.setPhysics(physics);
+        mainLoop = new MainLoop(physics);
         loopThread = new Thread(mainLoop);
         loopThread.start();
     }
     public void stopLoop(){
-        mainLoop.stopLoop();
+        if(mainLoop!=null)
+            mainLoop.stopLoop();
     }
     public void singleTick(){
         physics.tick();

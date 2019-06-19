@@ -2,16 +2,26 @@ import java.lang.Math;
 
 public class Physics {
 
+    public static final int FIRST_POSITION_X = 100;
+    public static final int FIRST_POSITION_Y = 350;
+
     private double a;
     private double v;
     private double vx, vy;
     private double ymax, xmax, t0, t1, tmax;
-    private double g = 9.80121;
+    private double g;
+
+    private Arrow arrow;
+    private double windX;
+    private double initPower;
+    private double power;
 
 
-    public Physics(double angle, double initialSpeed) {
+    public Physics(double angle, double initialSpeed,double g,double windX) {
         arrow = new Arrow();
         beginConfiguration();
+        arrow.setAngleX(angle);
+        this.g = g;
         v = initialSpeed;
         a = trim(Math.toRadians(angle));
         vx = v * StrictMath.cos(a);
@@ -38,10 +48,7 @@ public class Physics {
 
 
     ////////////////////
-    private Arrow arrow;
-    private double windX;
-    private double initPower;
-    private double power;
+
 
 
     public static final int WALL_X = 929;
@@ -81,10 +88,8 @@ public class Physics {
 
 
     private void beginConfiguration() {
-        arrow.setPosX(100);
-        arrow.setPosY(350);
-        arrow.setAngleX(45);
-        setInitPower(0.1F);
+        arrow.setPosX(FIRST_POSITION_X);
+        arrow.setPosY(FIRST_POSITION_Y);
     }
 
     public Arrow getArrow() {

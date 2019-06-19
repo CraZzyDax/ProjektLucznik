@@ -70,7 +70,9 @@ public class GameScreen extends HBox {
 
     private Rectangle arrowRectangle;
 
-    public GameScreen(Main main,Physics physics){
+    private AnimationTimer timer;
+
+    public GameScreen(Main main){
         try {
             background = new Image(new FileInputStream("gra.png"));
             arrowImage = new Image(new FileInputStream("strzala.png"));
@@ -82,7 +84,7 @@ public class GameScreen extends HBox {
         beginConfiguration();
         this.main = main;
         addEventsListeners();
-        drawArrowBeforeShot();
+        drawArrowBeforeShot(90);
     }
     private void beginConfiguration(){
 
@@ -138,8 +140,8 @@ public class GameScreen extends HBox {
         windLabelValueY.setScaleY(1.5);
 
 
-        arrowPositionX = new Label(Double.toString(physics.getArrow().getPosX()));
-        arrowPositionY = new Label(Double.toString(physics.getArrow().getPosY()));
+        arrowPositionX = new Label(Integer.toString(Physics.FIRST_POSITION_X));
+        arrowPositionY = new Label(Integer.toString(Physics.FIRST_POSITION_Y));
 
 
 
@@ -196,8 +198,8 @@ public class GameScreen extends HBox {
         backgroundImageView.setX(0);
         pasekImageView = new ImageView(pasek);
         arrowRectangle.setFill(new ImagePattern(arrowImage));
-        arrowRectangle.setX(physics.getArrow().getPosX()-75);
-        arrowRectangle.setY(physics.getArrow().getPosY()-7);
+        arrowRectangle.setX(Physics.FIRST_POSITION_X-75);
+        arrowRectangle.setY(Physics.FIRST_POSITION_Y-7);
 
         mainVBox= new VBox();
 
@@ -212,7 +214,7 @@ public class GameScreen extends HBox {
         this.getChildren().add(mainVBox);
 
 
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
 
             @Override
             public synchronized void handle(long now) {
@@ -223,7 +225,7 @@ public class GameScreen extends HBox {
             }
 
         };
-        timer.start();
+
 
 
     }
@@ -233,35 +235,36 @@ public class GameScreen extends HBox {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 powerLabelValue.setText(Integer.toString(newValue.intValue()));
-                physics.setPower(newValue.intValue());
+                //physics.setPower(newValue.intValue());
             }
         });
         windSliderX.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 windLabelValueX.setText(Integer.toString(newValue.intValue()));
-                physics.setWindX(newValue.intValue());
+                //physics.setWindX(newValue.intValue());
             }
         });
         gravitationSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 windLabelValueY.setText(Integer.toString(newValue.intValue()));
-                physics.setg(newValue.intValue());
+                //physics.setg(newValue.intValue());
             }
         });
 
         angle.valueProperty().addListener((observable, oldValue, newValue) -> {
             //arrowImageView.setRotate(newValue.intValue()-90);
             angleLabelValue.setText(Integer.toString(newValue.intValue()));
-            physics.getArrow().setAngleX(newValue.intValue());
-            drawArrowBeforeShot();
+            //physics.getArrow().setAngleX(newValue.intValue());
+            drawArrowBeforeShot(newValue.intValue());
         });
 
         executeRectangle.setOnMouseClicked(event -> {
             if(!isStarted){
                 main.startLoop();
                 main.enableAutoamtedTicks();
+                timer.start();
             }
 
             isStarted = true;
@@ -275,17 +278,35 @@ public class GameScreen extends HBox {
         });
     }
 
-    private void drawArrowBeforeShot(){
-
-
+    private void drawArrowBeforeShot(int rotatea){
         //arrowRectangle.setX(physics.getArrow().getPosX());
         //arrowRectangle.setY(physics.getArrow().getPosY());\
+        rotate.setPivotX(rotatea);
         arrowRectangle.getTransforms().add(rotate);
-        arrowRectangle.setRotate(physics.getArrow().getAngleX()-90);
+        arrowRectangle.setRotate(90);
 }
 
     public void drawArrowAfterShot(){
 
     }
 
+    public Slider getAngle() {
+        return angle;
+    }
+
+    public Slider getPowerSlider() {
+        return powerSlider;
+    }
+
+    public Slider getWindSliderX() {
+        return windSliderX;
+    }
+
+    public Slider getGravitationSlider() {
+        return gravitationSlider;
+    }
+
+    public void setPhysics(Physics physics) {
+        this.physics = physics;
+    }
 }
