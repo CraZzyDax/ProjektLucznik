@@ -1,32 +1,32 @@
 public class Arrow {
 
-    private double posX;
-    private double posY;
-    private double angleX;
+    private float posX;
+    private float posY;
+    private float angleX;
 
 
-    public double getPosX() {
+    public float getPosX() {
         return posX;
     }
 
-    public void setPosX(double posX) {
+    public void setPosX(float posX) {
         this.posX = posX;
     }
 
-    public double getPosY() {
+    public float getPosY() {
         return posY;
     }
 
-    public void setPosY(double posY) {
+    public void setPosY(float posY) {
         this.posY = posY;
     }
 
 
-    public double getAngleX() {
+    public float getAngleX() {
         return angleX;
     }
 
-    public void setAngleX(double angleX) {
+    public void setAngleX(float angleX) {
         this.angleX = angleX;
     }
 }

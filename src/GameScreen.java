@@ -13,8 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
-import java.lang.Math;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -160,9 +158,9 @@ public class GameScreen extends HBox {
         positionLabelsVBox.getChildren().add(arrowPositionY);
 
         configorationHBox = new HBox();
-        powerSlider = new Slider(0, 100, 10);
+        powerSlider = new Slider(5, 25, 10);
         windSliderX = new Slider(-50, 50, 0);
-        gravitationSlider = new Slider(-50, 50, 0);
+        gravitationSlider = new Slider(0, 20, 9.8);
         angle = new Slider(0, 180, 90);////////////////////////////////
         pasekPower.getChildren().addAll(powerSlider,powerLabelValue);
         pasekX.getChildren().addAll(windSliderX,windLabelValueX);
@@ -219,8 +217,9 @@ public class GameScreen extends HBox {
             public synchronized void handle(long now) {
                 arrowRectangle.setX(physics.getArrow().getPosX()-75);
                 arrowRectangle.setY(physics.getArrow().getPosY()-7);
-                arrowPositionX.setText(Double.toString(physics.getArrow().getPosX()));
-                arrowPositionY.setText(Double.toString(physics.getArrow().getPosY()));
+                arrowPositionX.setText(Float.toString(physics.getArrow().getPosX()));
+                arrowPositionY.setText(Float.toString(physics.getArrow().getPosY()));
+                arrowRectangle.setRotate(physics.getArrow().getAngleX());
             }
 
         };

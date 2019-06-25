@@ -75,10 +75,10 @@ public class Main extends Application {
     }
     public void startLoop(){
         physics = new Physics(
-                (double) gameScreen.getAngle().getValue(),
-                (double) gameScreen.getPowerSlider().getValue(),
-                (double) gameScreen.getGravitationSlider().getValue(),
-                (double) gameScreen.getWindSliderX().getValue());
+                (float) gameScreen.getAngle().getValue(),
+                (float) gameScreen.getPowerSlider().getValue(),
+                (float) gameScreen.getGravitationSlider().getValue(),
+                (float) gameScreen.getWindSliderX().getValue());
         gameScreen.setPhysics(physics);
         mainLoop = new MainLoop(physics);
         loopThread = new Thread(mainLoop);
