@@ -117,10 +117,10 @@ public class GameScreen extends HBox {
         buttonsVBox = new VBox();
         pasekPane = new Pane();
 
-        angleLabelValue = new Label("0");
-        powerLabelValue = new Label("50");
-        windLabelValueX = new Label("50");
-        windLabelValueY = new Label("50");
+        angleLabelValue = new Label("90");
+        powerLabelValue = new Label("10");
+        windLabelValueX = new Label("0");
+        windLabelValueY = new Label("9");
 
         angleLabelValue.setTextFill(Color.WHITE);
         powerLabelValue.setTextFill(Color.WHITE);
@@ -281,7 +281,7 @@ public class GameScreen extends HBox {
         //arrowRectangle.setY(physics.getArrow().getPosY());\
         rotate.setPivotX(rotatea);
         arrowRectangle.getTransforms().add(rotate);
-        arrowRectangle.setRotate(90);
+        arrowRectangle.setRotate(0);
 }
 
     public void drawArrowAfterShot(){
